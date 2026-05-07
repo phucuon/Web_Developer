@@ -1,0 +1,50 @@
+## .NET build output
+bin/
+obj/
+out/
+publish/
+
+## Visual Studio cache
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.csproj.user
+
+## Rider / VS Code
+.idea/
+.vscode/
+
+## Publish profiles user data
+Properties/PublishProfiles/*.pubxml.user
+
+## NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+!packages/build/
+
+## User Secrets
+secrets.json
+
+## Logs
+*.log
+logs/
+
+## OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## Backup
+*.bak
+*.swp
+*~
+
+## Test results
+TestResults/
+[Cc]overage*/
+*.coverage
+*.coveragexml
