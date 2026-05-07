@@ -1,7 +1,0 @@
-C:\Users\Admin\source\repos\WebDeveloper\WebDeveloper\obj\Release\net10.0\linux-x64\PubTmp\Out\WebDeveloper
-C:\Users\Admin\source\repos\WebDeveloper\WebDeveloper\obj\Release\net10.0\linux-x64\PubTmp\Out\appsettings.Development.json
-C:\Users\Admin\source\repos\WebDeveloper\WebDeveloper\obj\Release\net10.0\linux-x64\PubTmp\Out\appsettings.json
-C:\Users\Admin\source\repos\WebDeveloper\WebDeveloper\obj\Release\net10.0\linux-x64\PubTmp\Out\WebDeveloper.dll
-C:\Users\Admin\source\repos\WebDeveloper\WebDeveloper\obj\Release\net10.0\linux-x64\PubTmp\Out\WebDeveloper.deps.json
-C:\Users\Admin\source\repos\WebDeveloper\WebDeveloper\obj\Release\net10.0\linux-x64\PubTmp\Out\WebDeveloper.runtimeconfig.json
-C:\Users\Admin\source\repos\WebDeveloper\WebDeveloper\obj\Release\net10.0\linux-x64\PubTmp\Out\WebDeveloper.pdb
