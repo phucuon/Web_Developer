@@ -1,0 +1,46 @@
+<div class="modal fade" id="consult-popup" tabindex="-1" aria-labelledby="consult-popup-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content popup-content">
+      <div class="popup-header">
+        <h2 id="consult-popup-title" class="popup-title">Nhận tư vấn miễn phí</h2>
+        <p class="popup-sub">Báo giá chi tiết + Roadmap dự án trong 24 giờ</p>
+        <button type="button" class="btn-close popup-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="popup-body">
+        <form id="popup-form" class="popup-form" novalidate>
+          <div class="form-field">
+            <label for="popup-name" class="form-label">Họ và tên <span class="required">*</span></label>
+            <input type="text" id="popup-name" name="name" class="form-control" required minlength="2">
+            <div class="form-error" data-error-for="popup-name"></div>
+          </div>
+          <div class="form-field">
+            <label for="popup-phone" class="form-label">Số điện thoại <span class="required">*</span></label>
+            <input type="tel" id="popup-phone" name="phone" class="form-control" required pattern="^(0|\+84)[0-9]{9,10}$">
+            <div class="form-error" data-error-for="popup-phone"></div>
+          </div>
+          <div class="form-field">
+            <label for="popup-email" class="form-label">Email <span class="required">*</span></label>
+            <input type="email" id="popup-email" name="email" class="form-control" required>
+            <div class="form-error" data-error-for="popup-email"></div>
+          </div>
+          <div class="form-field">
+            <label for="popup-service" class="form-label">Loại dịch vụ</label>
+            <select id="popup-service" name="service" class="form-select">
+              <option value="">-- Chọn dịch vụ --</option>
+              <option value="outsource">Outsource phần mềm</option>
+              <option value="website">Thiết kế website</option>
+              <option value="api">Phát triển API</option>
+              <option value="branding">UI/UX & Branding</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary-cta btn-block">Nhận tư vấn ngay</button>
+          <p class="popup-note"><i class="bi bi-shield-lock" aria-hidden="true"></i> Cam kết bảo mật thông tin của bạn</p>
+          <div class="form-success" role="status" aria-live="polite" hidden>
+            <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+            <span>Cảm ơn bạn! Chúng tôi sẽ liên hệ trong 24 giờ.</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

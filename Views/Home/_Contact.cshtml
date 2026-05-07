@@ -1,0 +1,119 @@
+<section id="contact" class="contact-section">
+  <div class="container">
+    <div class="row g-5 align-items-stretch">
+      <div class="col-lg-5 contact-info" data-aos="fade-right">
+        <span class="tag-pill tag-pill-light">LIÊN HỆ</span>
+        <h2 class="section-title section-title-light">Bắt đầu câu chuyện của bạn</h2>
+        <p class="section-sub section-sub-light">
+          Chia sẻ ý tưởng của bạn, chúng tôi sẽ phản hồi trong vòng 24 giờ với báo giá chi tiết và roadmap dự án.
+        </p>
+
+        <ul class="contact-list">
+          <li class="contact-item">
+            <span class="contact-icon"><i class="bi bi-geo-alt" aria-hidden="true"></i></span>
+            <div>
+              <span class="contact-label">Địa chỉ</span>
+              <span class="contact-value">Số XX, Đường ABC, Quận YY, Hà Nội</span>
+            </div>
+          </li>
+          <li class="contact-item">
+            <span class="contact-icon"><i class="bi bi-telephone" aria-hidden="true"></i></span>
+            <div>
+              <span class="contact-label">Hotline</span>
+              <a href="tel:+84000000000" class="contact-value">0xxx xxx xxx</a>
+            </div>
+          </li>
+          <li class="contact-item">
+            <span class="contact-icon"><i class="bi bi-envelope" aria-hidden="true"></i></span>
+            <div>
+              <span class="contact-label">Email</span>
+              <a href="mailto:hello@@nhomai.vn" class="contact-value">hello@@nhomai.vn</a>
+            </div>
+          </li>
+          <li class="contact-item">
+            <span class="contact-icon"><i class="bi bi-clock" aria-hidden="true"></i></span>
+            <div>
+              <span class="contact-label">Giờ làm việc</span>
+              <span class="contact-value">Thứ 2 - Thứ 6 (9:00 - 18:00)</span>
+            </div>
+          </li>
+        </ul>
+
+        <ul class="contact-socials" aria-label="Mạng xã hội">
+          <li><a href="#" class="contact-social" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a></li>
+          <li><a href="#" class="contact-social" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a></li>
+          <li><a href="#" class="contact-social" aria-label="Behance"><i class="bi bi-behance" aria-hidden="true"></i></a></li>
+          <li><a href="#" class="contact-social" aria-label="LinkedIn"><i class="bi bi-linkedin" aria-hidden="true"></i></a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-7 contact-form-wrap" data-aos="fade-left">
+        <form id="contact-form" class="contact-form" novalidate>
+          <div class="row g-3">
+            <div class="col-md-6 form-field">
+              <label for="contact-name" class="form-label">Họ và tên <span class="required">*</span></label>
+              <input type="text" id="contact-name" name="name" class="form-control" required minlength="2" autocomplete="name">
+              <div class="form-error" data-error-for="contact-name"></div>
+            </div>
+            <div class="col-md-6 form-field">
+              <label for="contact-email" class="form-label">Email <span class="required">*</span></label>
+              <input type="email" id="contact-email" name="email" class="form-control" required autocomplete="email">
+              <div class="form-error" data-error-for="contact-email"></div>
+            </div>
+            <div class="col-md-6 form-field">
+              <label for="contact-phone" class="form-label">Số điện thoại <span class="required">*</span></label>
+              <input type="tel" id="contact-phone" name="phone" class="form-control" required pattern="^(0|\+84)[0-9]{9,10}$" autocomplete="tel">
+              <div class="form-error" data-error-for="contact-phone"></div>
+            </div>
+            <div class="col-md-6 form-field">
+              <label for="contact-service" class="form-label">Loại dịch vụ <span class="required">*</span></label>
+              <select id="contact-service" name="service" class="form-select" required>
+                <option value="">-- Chọn dịch vụ --</option>
+                <option value="outsource">Outsource phần mềm</option>
+                <option value="website">Thiết kế website</option>
+                <option value="api">Phát triển API</option>
+                <option value="branding">UI/UX & Branding</option>
+                <option value="other">Khác</option>
+              </select>
+              <div class="form-error" data-error-for="contact-service"></div>
+            </div>
+            <div class="col-md-6 form-field">
+              <label for="contact-budget" class="form-label">Ngân sách dự kiến</label>
+              <select id="contact-budget" name="budget" class="form-select">
+                <option value="">-- Chọn ngân sách --</option>
+                <option value="under-30">Dưới 30 triệu</option>
+                <option value="30-100">30-100 triệu</option>
+                <option value="100-300">100-300 triệu</option>
+                <option value="over-300">Trên 300 triệu</option>
+                <option value="consult">Cần tư vấn</option>
+              </select>
+            </div>
+            <div class="col-12 form-field">
+              <label for="contact-message" class="form-label">Mô tả dự án <span class="required">*</span></label>
+              <textarea id="contact-message" name="message" class="form-control" rows="4" required minlength="10"></textarea>
+              <div class="form-error" data-error-for="contact-message"></div>
+            </div>
+            <div class="col-12 form-field form-check-wrap">
+              <div class="form-check">
+                <input type="checkbox" id="contact-consent" name="consent" class="form-check-input" required>
+                <label for="contact-consent" class="form-check-label">Tôi đồng ý với điều khoản và chính sách bảo mật</label>
+              </div>
+              <div class="form-error" data-error-for="contact-consent"></div>
+            </div>
+            <div class="col-12 form-field">
+              <button type="submit" class="btn btn-primary-cta btn-block">
+                Gửi yêu cầu của bạn
+                <i class="bi bi-send" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-success" role="status" aria-live="polite" hidden>
+            <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+            <span>Cảm ơn bạn! Chúng tôi sẽ liên hệ trong 24 giờ.</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

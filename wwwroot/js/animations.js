@@ -1,0 +1,115 @@
+(() => {
+  'use strict';
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile = window.matchMedia('(max-width: 991.98px)').matches;
+
+  const initAOS = () => {
+    if (typeof window.AOS === 'undefined') return;
+    window.AOS.init({
+      duration: 700,
+      easing: 'ease-out-cubic',
+      once: true,
+      offset: 80,
+      disable: prefersReduced
+    });
+  };
+
+  const initTyped = () => {
+    if (typeof window.Typed === 'undefined') return;
+    if (!document.getElementById('hero-typed')) return;
+    new window.Typed('#hero-typed', {
+      strings: ['không phai', 'không quên', 'mãi mãi'],
+      typeSpeed: 80,
+      backSpeed: 50,
+      backDelay: 1800,
+      loop: true,
+      smartBackspace: true
+    });
+  };
+
+  const initParticles = () => {
+    if (typeof window.particlesJS === 'undefined') return;
+    if (!document.getElementById('hero-particles')) return;
+    if (prefersReduced || isMobile) return;
+    window.particlesJS('hero-particles', {
+      particles: {
+        number: { value: 18, density: { enable: true, value_area: 1000 } },
+        color: { value: '#E8B86E' },
+        shape: { type: 'circle' },
+        opacity: { value: 0.35, random: true, anim: { enable: false } },
+        size: { value: 3, random: true, anim: { enable: false } },
+        line_linked: { enable: false },
+        move: { enable: true, speed: 0.6, direction: 'none', random: true, straight: false, out_mode: 'out' }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: { onhover: { enable: false }, onclick: { enable: false }, resize: true }
+      },
+      retina_detect: false
+    });
+  };
+
+  const initCounters = () => {
+    if (typeof window.countUp === 'undefined') return;
+    const Counter = window.countUp.CountUp;
+    const elements = document.querySelectorAll('[data-count]');
+    if (!elements.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        if (el.dataset.counted === 'true') return;
+        const target = parseFloat(el.dataset.count) || 0;
+        const suffix = el.dataset.suffix || '';
+        const counter = new Counter(el, target, { duration: 2.2, separator: ',', suffix });
+        if (!counter.error) counter.start();
+        else el.textContent = target + suffix;
+        el.dataset.counted = 'true';
+        observer.unobserve(el);
+      });
+    }, { threshold: 0.4 });
+
+    elements.forEach(el => observer.observe(el));
+  };
+
+  const initGsapAnimations = () => {
+    if (typeof window.gsap === 'undefined') return;
+    const gsap = window.gsap;
+    if (typeof window.ScrollTrigger !== 'undefined') gsap.registerPlugin(window.ScrollTrigger);
+
+    gsap.from('.site-header', { y: -50, opacity: 0, duration: 0.8, ease: 'power2.out' });
+
+    if (!prefersReduced) {
+      const mockup = document.querySelector('.mockup-laptop');
+      if (mockup) gsap.to(mockup, { y: -10, duration: 3, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+
+      const scrollIndicator = document.querySelector('.scroll-indicator');
+      if (scrollIndicator) gsap.to(scrollIndicator, { y: 8, duration: 1.4, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+    }
+
+    if (typeof window.ScrollTrigger !== 'undefined') {
+      const linePath = document.querySelector('.process-line-path');
+      if (linePath) {
+        window.ScrollTrigger.create({
+          trigger: '.process-section',
+          start: 'top 70%',
+          once: true,
+          onEnter: () => linePath.classList.add('is-drawn')
+        });
+      }
+    }
+  };
+
+  const onReady = () => {
+    initAOS();
+    initTyped();
+    initParticles();
+    initCounters();
+    initGsapAnimations();
+  };
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onReady);
+  else onReady();
+})();
