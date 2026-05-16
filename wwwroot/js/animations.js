@@ -11,7 +11,7 @@
       easing: 'ease-out-cubic',
       once: true,
       offset: 80,
-      disable: prefersReduced
+      disable: () => prefersReduced || window.innerWidth < 768
     });
   };
 
@@ -28,27 +28,7 @@
     });
   };
 
-  const initParticles = () => {
-    if (typeof window.particlesJS === 'undefined') return;
-    if (!document.getElementById('hero-particles')) return;
-    if (prefersReduced || isMobile) return;
-    window.particlesJS('hero-particles', {
-      particles: {
-        number: { value: 18, density: { enable: true, value_area: 1000 } },
-        color: { value: '#E8B86E' },
-        shape: { type: 'circle' },
-        opacity: { value: 0.35, random: true, anim: { enable: false } },
-        size: { value: 3, random: true, anim: { enable: false } },
-        line_linked: { enable: false },
-        move: { enable: true, speed: 0.6, direction: 'none', random: true, straight: false, out_mode: 'out' }
-      },
-      interactivity: {
-        detect_on: 'canvas',
-        events: { onhover: { enable: false }, onclick: { enable: false }, resize: true }
-      },
-      retina_detect: false
-    });
-  };
+  const initParticles = () => {};
 
   const initCounters = () => {
     if (typeof window.countUp === 'undefined') return;
@@ -82,9 +62,6 @@
     gsap.from('.site-header', { y: -50, opacity: 0, duration: 0.8, ease: 'power2.out' });
 
     if (!prefersReduced) {
-      const mockup = document.querySelector('.mockup-laptop');
-      if (mockup) gsap.to(mockup, { y: -10, duration: 3, ease: 'sine.inOut', yoyo: true, repeat: -1 });
-
       const scrollIndicator = document.querySelector('.scroll-indicator');
       if (scrollIndicator) gsap.to(scrollIndicator, { y: 8, duration: 1.4, ease: 'sine.inOut', yoyo: true, repeat: -1 });
     }
@@ -105,7 +82,6 @@
   const onReady = () => {
     initAOS();
     initTyped();
-    initParticles();
     initCounters();
     initGsapAnimations();
   };

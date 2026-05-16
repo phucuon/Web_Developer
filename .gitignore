@@ -48,3 +48,8 @@ TestResults/
 [Cc]overage*/
 *.coverage
 *.coveragexml
+/appsettings.json
+
+## Video files (too large for git)
+wwwroot/assets/videos/*.mp4
+wwwroot/assets/videos/*.webm

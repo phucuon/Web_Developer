@@ -1,12 +1,65 @@
 (() => {
   'use strict';
 
+  const hidePageLoader = () => {
+    const loader = document.getElementById('page-loader');
+    if (!loader) return;
+    setTimeout(() => {
+      loader.classList.add('is-hidden');
+      setTimeout(() => loader.remove(), 600);
+    }, 500);
+  };
+
+  if (document.readyState === 'complete') hidePageLoader();
+  else window.addEventListener('load', hidePageLoader);
+
   const header = document.getElementById('site-header');
   const navToggle = document.querySelector('.nav-toggle');
   const navList = document.getElementById('primary-menu');
   const navLinks = document.querySelectorAll('.nav-link, .nav-cta');
+  const toastContainer = document.getElementById('toast-container');
 
   let scrollTicking = false;
+
+  const showToast = (message, type = 'info', title = '') => {
+    if (!toastContainer || !window.bootstrap) return;
+    const config = {
+      success: { icon: 'bi-check-circle-fill', cls: 'toast-success', defaultTitle: 'Thành công' },
+      error: { icon: 'bi-x-circle-fill', cls: 'toast-error', defaultTitle: 'Có lỗi xảy ra' },
+      warning: { icon: 'bi-exclamation-triangle-fill', cls: 'toast-warning', defaultTitle: 'Cảnh báo' },
+      info: { icon: 'bi-info-circle-fill', cls: 'toast-info', defaultTitle: 'Thông báo' }
+    }[type] || { icon: 'bi-info-circle-fill', cls: 'toast-info', defaultTitle: 'Thông báo' };
+
+    const el = document.createElement('div');
+    el.className = `toast app-toast ${config.cls}`;
+    el.setAttribute('role', 'alert');
+    el.setAttribute('aria-live', 'assertive');
+    el.setAttribute('aria-atomic', 'true');
+    el.innerHTML = `
+      <div class="toast-header">
+        <i class="bi ${config.icon} toast-icon" aria-hidden="true"></i>
+        <strong class="me-auto">${title || config.defaultTitle}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Đóng"></button>
+      </div>
+      <div class="toast-body">${message}</div>`;
+    toastContainer.appendChild(el);
+    const toast = new window.bootstrap.Toast(el, { delay: 5000, autohide: true });
+    el.addEventListener('hidden.bs.toast', () => el.remove());
+    toast.show();
+  };
+
+  window.showToast = showToast;
+
+  const getRecaptchaToken = async (action) => {
+    const siteKey = window.__RECAPTCHA_SITE_KEY;
+    if (!siteKey || typeof window.grecaptcha === 'undefined') return '';
+    try {
+      await new Promise(resolve => window.grecaptcha.ready(resolve));
+      return await window.grecaptcha.execute(siteKey, { action });
+    } catch {
+      return '';
+    }
+  };
 
   const showPopupOnce = () => {
     if (sessionStorage.getItem('popupShown') === 'true') return;
@@ -134,7 +187,49 @@
     if (errorEl) errorEl.textContent = message;
   };
 
-  const attachFormValidation = (formId) => {
+  const buildPayload = (form) => {
+    const data = {};
+    form.querySelectorAll('input[name], select[name], textarea[name]').forEach(el => {
+      if (el.type === 'checkbox') data[el.name] = el.checked;
+      else data[el.name] = el.value.trim();
+    });
+    return data;
+  };
+
+  const submitToApi = async (endpoint, payload) => {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    let body = null;
+    try { body = await res.json(); } catch { /* ignore */ }
+    return { ok: res.ok, status: res.status, body };
+  };
+
+  const setFormBusy = (form, busy) => {
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (!submitBtn) return;
+    if (busy) {
+      submitBtn.dataset.originalHtml ??= submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang gửi...';
+    } else {
+      submitBtn.disabled = false;
+      if (submitBtn.dataset.originalHtml) submitBtn.innerHTML = submitBtn.dataset.originalHtml;
+    }
+  };
+
+  const resetForm = (form) => {
+    form.querySelectorAll('.form-control, .form-select, .form-check-input').forEach(el => {
+      if (el.type === 'checkbox') el.checked = false;
+      else el.value = '';
+      el.classList.remove('is-valid', 'is-invalid');
+    });
+    form.querySelectorAll('.form-error').forEach(el => { el.textContent = ''; });
+  };
+
+  const attachFormValidation = (formId, endpoint, action) => {
     const form = document.getElementById(formId);
     if (!form) return;
 
@@ -146,56 +241,75 @@
       });
     });
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       let allValid = true;
       fields.forEach(field => { if (!validateField(field)) allValid = false; });
       if (!allValid) {
         const firstInvalid = form.querySelector('.is-invalid');
         if (firstInvalid) firstInvalid.focus();
+        showToast('Vui lòng kiểm tra lại các trường được đánh dấu.', 'warning');
         return;
       }
-      const success = form.querySelector('.form-success');
-      if (success) success.hidden = false;
-      form.querySelectorAll('.form-control, .form-select, .form-check-input').forEach(el => {
-        if (el.type === 'checkbox') el.checked = false;
-        else el.value = '';
-        el.classList.remove('is-valid', 'is-invalid');
-      });
-      if (formId === 'popup-form') {
-        setTimeout(() => {
-          const modal = document.getElementById('consult-popup');
-          if (modal && window.bootstrap) {
-            const instance = window.bootstrap.Modal.getInstance(modal);
-            if (instance) instance.hide();
+
+      setFormBusy(form, true);
+      try {
+        const payload = buildPayload(form);
+        payload.recaptchaToken = await getRecaptchaToken(action);
+        const result = await submitToApi(endpoint, payload);
+        if (result.ok && result.body?.success) {
+          showToast(result.body.message || 'Cảm ơn bạn! Chúng tôi sẽ liên hệ trong 24 giờ.', 'success', 'Gửi thành công');
+          resetForm(form);
+          if (formId === 'popup-form') {
+            setTimeout(() => {
+              const modal = document.getElementById('consult-popup');
+              if (modal && window.bootstrap) {
+                const instance = window.bootstrap.Modal.getInstance(modal);
+                if (instance) instance.hide();
+              }
+            }, 1500);
           }
-          if (success) success.hidden = true;
-        }, 3000);
-      } else {
-        setTimeout(() => { if (success) success.hidden = true; }, 6000);
+        } else {
+          showToast(result.body?.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error');
+        }
+      } catch {
+        showToast('Không thể kết nối máy chủ. Vui lòng thử lại sau.', 'error');
+      } finally {
+        setFormBusy(form, false);
       }
     });
   };
 
-  attachFormValidation('contact-form');
-  attachFormValidation('popup-form');
+  attachFormValidation('contact-form', '/api/contact', 'contact');
+  attachFormValidation('popup-form', '/api/popup', 'popup');
 
   const newsletterForm = document.getElementById('newsletter-form');
   if (newsletterForm) {
-    newsletterForm.addEventListener('submit', (e) => {
+    newsletterForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const input = newsletterForm.querySelector('.newsletter-input');
-      const feedback = newsletterForm.querySelector('.newsletter-feedback');
-      if (!input || !feedback) return;
+      const button = newsletterForm.querySelector('.newsletter-btn');
+      if (!input) return;
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim())) {
-        feedback.textContent = 'Email không hợp lệ.';
-        feedback.style.color = 'var(--color-error)';
+        showToast('Email không hợp lệ.', 'warning');
         return;
       }
-      feedback.textContent = 'Cảm ơn! Bạn đã đăng ký thành công.';
-      feedback.style.color = 'var(--color-secondary)';
-      input.value = '';
-      setTimeout(() => { feedback.textContent = ''; }, 5000);
+
+      if (button) button.disabled = true;
+      try {
+        const token = await getRecaptchaToken('newsletter');
+        const result = await submitToApi('/api/newsletter', { email: input.value.trim(), recaptchaToken: token });
+        if (result.ok && result.body?.success) {
+          showToast(result.body.message || 'Cảm ơn! Bạn đã đăng ký thành công.', 'success', 'Đăng ký thành công');
+          input.value = '';
+        } else {
+          showToast(result.body?.message || 'Có lỗi xảy ra.', 'error');
+        }
+      } catch {
+        showToast('Không kết nối được máy chủ.', 'error');
+      } finally {
+        if (button) button.disabled = false;
+      }
     });
   }
 
